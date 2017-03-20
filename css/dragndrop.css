@@ -1,15 +1,15 @@
 #drag-arrow {
   position: absolute;
-  margin-left: 100vh;  /* same as .draggable */
-  margin-top: 100px;  /* same as images */
-  padding-top: 10px;
+  margin-left: 101vh;  /* match .draggable */
+  margin-top: 100px;  /* match images */
+  padding-top: 25px;
 }
 
 #drag-text {
   position: absolute;
-  margin-left: 100vh;  /* same as .draggable */
-  margin-top: 100px;  /* same as images */
-  padding: 60px;
+  margin-left: 100vh;  /* match .draggable */
+  margin-top: 100px;  /* match images */
+  padding: 70px;
 }
 
 .dropzone-wrapper {
@@ -44,8 +44,8 @@
 .draggable {
   position: absolute;
   z-index: 10;
-  margin: .5em;
-  margin-left: 100vh;
+  margin: 2em;
+  margin-left: 101vh;
   text-align: center;
 
   -ms-touch-action: none;
