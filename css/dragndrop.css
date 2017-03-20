@@ -1,21 +1,34 @@
+#drag-arrow {
+  position: absolute;
+  margin-left: 100vh;  /* same as .draggable */
+  margin-top: 100px;  /* same as images */
+  padding-top: 10px;
+}
+
+#drag-text {
+  position: absolute;
+  margin-left: 100vh;  /* same as .draggable */
+  margin-top: 100px;  /* same as images */
+  padding: 60px;
+}
 
 .dropzone-wrapper {
-    position: absolute;
-    width: 98vh;
-    height: 98vh;
-    top: 0;
-    margin: auto;
+  position: absolute;
+  width: 98vh;
+  height: 98vh;
+  top: 0;
+  margin: auto;
 }
 
 .dropzone {
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    margin: .5em;
-    padding: 1em;
-    color: #666;
-    border: 4px solid;
-    transition: background .15s linear, border-color .15s linear;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: .5em;
+  padding: 1em;
+  color: #666;
+  border: 4px solid;
+  transition: background .15s linear, border-color .15s linear;
 }
 
 .dropzone.-drop-possible {
@@ -24,19 +37,25 @@
 }
 
 .dropzone.-drop-over {
-    background: #666;
-    color: #fff;
+  background: #666;
+  color: #fff;
 }
 
 .draggable {
-    position: absolute;
-    z-index: 10;
-    margin: .5em;
-    margin-left: 100vh;
-    text-align: center;
+  position: absolute;
+  z-index: 10;
+  margin: .5em;
+  margin-left: 100vh;
+  text-align: center;
 
-    -ms-touch-action: none;
-        touch-action: none;
+  -ms-touch-action: none;
+      touch-action: none;
 }
 
-.draggable.-drop-possible { background-color: #42bd41; }
+.shadow {
+  box-shadow: 0 0 10px grey;
+}
+
+.draggable.-drop-possible {
+  background-color: #42bd41;
+}

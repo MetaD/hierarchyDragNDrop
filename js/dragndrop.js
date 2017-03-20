@@ -6,17 +6,14 @@
 
     interact.maxInteractions(Infinity);
 
-
-
     var gender = 'F';  // TODO
     for (var i = 1; i < 10; ++i) {
         $('#images').append($('<img>', {
             src: 'img/' + gender + i.toString() + '.jpg',
             height: '100px',
             weight: '100px',
-            class: 'draggable js-drag'
+            class: 'draggable js-drag shadow',
         }));
-        console.log(i);
     }
 
     // setup draggable elements.
