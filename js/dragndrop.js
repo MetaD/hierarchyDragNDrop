@@ -1,5 +1,4 @@
 (function (interact) {
-
     'use strict';
 
     var transformProp;
@@ -7,16 +6,33 @@
     interact.maxInteractions(Infinity);
 
     var gender = 'F';  // TODO
-    for (var i = 1; i < 10; ++i) {
-        $('#images').append($('<img>', {
-            src: 'img/' + gender + i.toString() + '.jpg',
-            height: '100px',
-            weight: '100px',
-            class: 'draggable js-drag shadow',
-        }));
+    var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    // shuffle image names
+    for (var i = imgNames.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = imgNames[i];
+        imgNames[i] = imgNames[j];
+        imgNames[j] = temp;
+    }
+    // append images to DOM
+    var marginTop = 20;
+    var marginLeft = Math.round(1.02 * document.documentElement.clientHeight);  // px value of 102vh
+    for (var i = 0; i < 3; ++i) {
+        for (var j = 0; j < 3; ++j) {
+            $('#images').append($('<img>', {
+                src: 'img/' + gender + imgNames[i*3+j] + '.jpg',
+                class: 'draggable js-drag shadow',
+                style: 'margin-left:' + marginLeft.toString() + 'px; margin-top:' + marginTop.toString() + 'px;',
+                height: '100px',
+                width: '100px',
+            }));
+            marginLeft += 105;
+        }
+        marginTop += 105;
+        marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
     }
 
-    // setup draggable elements.
+    // setup draggable elements
     interact('.js-drag')
         .draggable({ max: Infinity })
         .on('dragstart', function (event) {
@@ -68,7 +84,7 @@
                 // change style if it was previously not active
                 if (active === 0) {
                     addClass(event.target, '-drop-possible');
-                    event.target.textContent = 'Drop image here';
+                    // event.target.textContent = 'Drop image here';
                 }
 
                 event.target.setAttribute('active', active + 1);
@@ -80,7 +96,7 @@
                 // but will no longer be active
                 if (active === 1) {
                     removeClass(event.target, '-drop-possible');
-                    event.target.textContent = 'Arrange images here';
+                    // event.target.textContent = 'Arrange images here';
                 }
 
                 event.target.setAttribute('active', active - 1);
