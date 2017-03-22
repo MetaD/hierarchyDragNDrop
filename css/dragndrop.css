@@ -14,11 +14,10 @@ body { background-color: #ddd; }
   padding: 65px;
 }
 
-#instr {
+#submit {
   position: absolute;
-  margin-left: 100vh;  /* match .draggable */
-  padding: 30px;
-  bottom: 100px;
+  margin-left: 101vh;  /* match .draggable */
+  bottom: 2vh;
 }
 
 .dropzone-wrapper {

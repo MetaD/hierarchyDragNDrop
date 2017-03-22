@@ -1,11 +1,26 @@
+var hookWindow = false;
+
 (function (interact) {
     'use strict';
 
-    var transformProp;
+    // Prevent closing window
+    window.onbeforeunload = function() {
+        if (hookWindow) {
+            return 'Do you want to leave this page? Your progress will not be saved.';
+        }
+    }
 
-    interact.maxInteractions(Infinity);
+    // URL parameters (id & gender)
+    var userId, gender;
+    var parameters = window.location.search.substring(1);
+    if (parameters.length > 0) {
+        var stuff = parameters.split(/[&=]/);
+        userId = stuff[1];
+        gender = stuff[3];
+    }
+    var experimentId = Date.now();
 
-    var gender = 'F';  // TODO
+    // images
     var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     // shuffle image names
     for (var i = imgNames.length - 1; i > 0; i--) {
@@ -31,6 +46,46 @@
         marginTop += 105;
         marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
     }
+
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCv41O7LrglT7ErDtB9itFt5KG5EtyKLfE",
+        authDomain: "hierarchy-351e6.firebaseapp.com",
+        databaseURL: "https://hierarchy-351e6.firebaseio.com",
+        storageBucket: "hierarchy-351e6.appspot.com",
+        messagingSenderId: "202596010925"
+    };
+    firebase.initializeApp(config);
+    // Sign in
+    // firebase.auth().signInAnonymously().then(function(user) {
+    //     var firebaseUid = user.uid;
+    //     console.log('Signed in as ' + firebaseUid);
+
+    //     firebase.database().ref('/' + userId + '/' + experimentId).set({
+    //         firebase_uid: firebaseUid,
+    //         start_time: (new Date()).toUTCString(),
+    //         gender: gender,
+    //         image_order: imgNames
+    //     });
+    // });
+
+    // submit button
+    $('#submit').click(function() {
+        var path = '/' + userId + '/' + experimentId;
+        var update = {};
+        update[path + '/duration'] = (Date.now() - experimentId) / 1000;  // in sec
+        update[path + '/end_time'] = (new Date()).toUTCString();
+        // update[path + '/data'] = ;
+
+        firebase.database().ref().update(update).then(function() {
+            hookWindow = false;
+            firebase.auth().currentUser.delete();
+        });
+    });
+
+    // interactive.js setup
+    var transformProp;
+    interact.maxInteractions(Infinity);
 
     // setup draggable elements
     interact('.js-drag')
@@ -141,5 +196,7 @@
             ? 'oTransform': 'msTransform' in document.body.style
             ? 'msTransform': null;
     });
+
+    hookWindow = true;
 
 }(window.interact));
