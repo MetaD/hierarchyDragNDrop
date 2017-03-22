@@ -12,15 +12,17 @@
         <link rel="stylesheet" href="css/dragndrop.css">
     </head>
     <body>
-        <div id="images"></div>
-        <img id="drag-arrow" src="img\arrow.png">
-        <div id="drag-text">Drag</div>
+        <div id="everything">
+            <div id="images"></div>
+            <img id="drag-arrow" src="img\arrow.png">
+            <div id="drag-text">Drag</div>
 
-        <div class="dropzone-wrapper">
-            <div id="drop" class="dropzone js-drop"></div>
+            <div class="dropzone-wrapper">
+                <div id="drop" class="dropzone js-drop"></div>
+            </div>
+            
+            <button id="submit" class="btn btn-primary disabled">Submit</button>
         </div>
-        
-        <button id="submit" class="btn btn-primary">Submit</button>
 
         <!-- Script -->
         <script type="text/javascript" src="js/dragndrop.js"></script>

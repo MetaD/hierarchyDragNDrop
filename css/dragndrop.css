@@ -20,6 +20,13 @@ body { background-color: #ddd; }
   bottom: 2vh;
 }
 
+#end-instr {
+  display: table;
+  margin: auto;
+  margin-top: 48vh;
+  font-size: 20pt;
+}
+
 .dropzone-wrapper {
   position: absolute;
   width: 98vh;

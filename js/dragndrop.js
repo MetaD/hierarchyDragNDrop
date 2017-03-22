@@ -22,6 +22,9 @@ var hookWindow = false;
 
     // images
     var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    for (var i = 0; i < imgNames.length; ++i) {
+        imgNames[i] = gender + imgNames[i] + '.jpg'
+    }
     // shuffle image names
     for (var i = imgNames.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -35,7 +38,7 @@ var hookWindow = false;
     for (var i = 0; i < 3; ++i) {
         for (var j = 0; j < 3; ++j) {
             $('#images').append($('<img>', {
-                src: 'img/' + gender + imgNames[i*3+j] + '.jpg',
+                src: 'img/' + imgNames[i*3+j],
                 class: 'draggable js-drag shadow',
                 style: 'margin-left:' + marginLeft.toString() + 'px; margin-top:' + marginTop.toString() + 'px;',
                 height: '100px',
@@ -45,6 +48,12 @@ var hookWindow = false;
         }
         marginTop += 105;
         marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
+    }
+    // image position data
+    var numImgDropped = 0;
+    var imgDropped = {};
+    for (var i = 0; i < imgNames.length; ++i) {
+        imgDropped[imgNames[i]] = false;
     }
 
     // Initialize Firebase
@@ -57,29 +66,52 @@ var hookWindow = false;
     };
     firebase.initializeApp(config);
     // Sign in
-    // firebase.auth().signInAnonymously().then(function(user) {
-    //     var firebaseUid = user.uid;
-    //     console.log('Signed in as ' + firebaseUid);
+    firebase.auth().signInAnonymously().then(function(user) {
+        var firebaseUid = user.uid;
+        console.log('Signed in as ' + firebaseUid);
 
-    //     firebase.database().ref('/' + userId + '/' + experimentId).set({
-    //         firebase_uid: firebaseUid,
-    //         start_time: (new Date()).toUTCString(),
-    //         gender: gender,
-    //         image_order: imgNames
-    //     });
-    // });
+        firebase.database().ref('/' + userId + '/' + experimentId).set({
+            firebase_uid: firebaseUid,
+            start_time: (new Date()).toUTCString(),
+            gender: gender,
+            image_order: imgNames
+        });
+    });
 
     // submit button
     $('#submit').click(function() {
+        if ($('#submit').hasClass('disabled')) {
+            return;
+        }
+        // image positions
+        var positions = {}
+        $('#images img').each(function() {
+            var filename = this.currentSrc.split('/');
+            filename = filename[filename.length - 1];
+            filename = filename.replace('.', '_');  // because firebase doesn't allow '.' in keys
+            positions[filename] = [this.x, this.y];
+        });
+
+        // firebase update
         var path = '/' + userId + '/' + experimentId;
         var update = {};
         update[path + '/duration'] = (Date.now() - experimentId) / 1000;  // in sec
         update[path + '/end_time'] = (new Date()).toUTCString();
-        // update[path + '/data'] = ;
+        update[path + '/data'] = positions;
 
         firebase.database().ref().update(update).then(function() {
+            // successful
             hookWindow = false;
             firebase.auth().currentUser.delete();
+            // change DOM
+            $('#everything').hide();
+            $('body').append($('<p>', {
+                text: 'Your response has been successfully submitted. Thank you!',
+                id: 'end-instr'
+            }))
+        }, function() {
+            alert('Error');
+            // TODO save a file?
         });
     });
 
@@ -158,15 +190,33 @@ var hookWindow = false;
             })
             .on('dragenter', function (event) {
                 addClass(event.target, '-drop-over');
-                event.relatedTarget.textContent = 'I\'m in';
+                // event.relatedTarget.textContent = 'I\'m in';
+                var filename = event.relatedTarget.currentSrc.split('/');
+                filename = filename[filename.length - 1];
+                if (!imgDropped[filename]) {
+                    imgDropped[filename] = true;
+                    ++numImgDropped;
+                    if (numImgDropped == imgNames.length && $('#submit').hasClass('disabled')) {
+                        $('#submit').removeClass('disabled');
+                    }
+                }
             })
             .on('dragleave', function (event) {
                 removeClass(event.target, '-drop-over');
-                event.relatedTarget.textContent = 'Drag me…';
+                // event.relatedTarget.textContent = 'Drag me…';
+                var filename = event.relatedTarget.currentSrc.split('/');
+                filename = filename[filename.length - 1];
+                if (imgDropped[filename]) {
+                    imgDropped[filename] = false;
+                    --numImgDropped;
+                    if (numImgDropped < imgNames.length && !$('#submit').hasClass('disabled')) {
+                        $('#submit').addClass('disabled');
+                    }
+                }
             })
             .on('drop', function (event) {
                 removeClass(event.target, '-drop-over');
-                event.relatedTarget.textContent = 'Dropped';
+                // event.relatedTarget.textContent = 'Dropped';
             });
     }
 
