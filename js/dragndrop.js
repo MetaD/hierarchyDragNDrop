@@ -16,10 +16,20 @@ var hookWindow = false;
     if (parameters.length > 0) {
         var stuff = parameters.split(/[&=]/);
         userId = stuff[1];
-        gender = stuff[3];
-    }
+        gender = stuff[3]    };
+
     var experimentId = Date.now();
 
+    // grid
+    for (var i = 0; i < 30; ++i) {
+        $('#grid').append($('<tr>'));
+    }
+    $('#grid tr').each(function() {
+        console.log(this);
+        for (var i = 0; i < 30; ++i) {
+            $(this).append($('<td>'));
+        }
+    })
     // images
     var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     for (var i = 0; i < imgNames.length; ++i) {
@@ -66,17 +76,17 @@ var hookWindow = false;
     };
     firebase.initializeApp(config);
     // Sign in
-    // firebase.auth().signInAnonymously().then(function(user) {
-    //     var firebaseUid = user.uid;
-    //     console.log('Signed in as ' + firebaseUid);
+    firebase.auth().signInAnonymously().then(function(user) {
+        var firebaseUid = user.uid;
+        console.log('Signed in as ' + firebaseUid);
 
-    //     firebase.database().ref('/' + userId + '/' + experimentId).set({
-    //         firebase_uid: firebaseUid,
-    //         start_time: (new Date()).toUTCString(),
-    //         gender: gender,
-    //         image_order: imgNames
-    //     });
-    // });
+        firebase.database().ref('/' + userId + '/' + experimentId).set({
+            firebase_uid: firebaseUid,
+            start_time: (new Date()).toUTCString(),
+            gender: gender,
+            image_order: imgNames
+        });
+    });
 
     // submit button
     $('#submit').click(function() {
@@ -122,7 +132,7 @@ var hookWindow = false;
     // setup draggable elements
     interact('.js-drag')
         .draggable({ max: Infinity })
-        // .inertia(true) todo
+        .inertia(true)
         .on('dragstart', function (event) {
             event.interaction.x = parseInt(event.target.getAttribute('data-x'), 10) || 0;
             event.interaction.y = parseInt(event.target.getAttribute('data-y'), 10) || 0;
@@ -152,7 +162,7 @@ var hookWindow = false;
     var snapGrid = interact.createSnapGrid({
         x: 100,
         y: 100,
-        offset: { x: $('#drop').offset().top + 5, y: $('#drop').offset().left + 5 }
+        offset: { x: $('#drop').offset().top + 4, y: $('#drop').offset().left + 4 }
     });
 
     /**
@@ -198,12 +208,20 @@ var hookWindow = false;
             .on('dragenter', function (event) {
                 addClass(event.target, '-drop-over');
                 // event.relatedTarget.textContent = 'I\'m in';
-                event.draggable.snap({
-                    targets: [snapGrid],
-                    range: Infinity,
-                    elementOrigin: { x: 0, y: 0 }
-                    // endOnly: true
-                });
+
+                interact('.js-drag').draggable({
+                    snap: {
+                        targets: [snapGrid],
+                        relativePoints: [{ x: 0, y: 0 }],
+                        endOnly: true
+                    }
+                })
+                // event.draggable.snap({
+                //     targets: [snapGrid],
+                //     range: Infinity,
+                //     elementOrigin: { x: 0, y: 0 }
+                //     // endOnly: true
+                // });
 
                 // counter
                 var filename = event.relatedTarget.currentSrc.split('/');
@@ -219,7 +237,7 @@ var hookWindow = false;
             .on('dragleave', function (event) {
                 removeClass(event.target, '-drop-over');
                 // event.relatedTarget.textContent = 'Drag me…';
-                event.draggable.snap(false);
+                interact('.js-drag').draggable({snap: false});
 
                 // counter
                 var filename = event.relatedTarget.currentSrc.split('/');
