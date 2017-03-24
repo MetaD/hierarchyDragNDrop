@@ -66,17 +66,17 @@ var hookWindow = false;
     };
     firebase.initializeApp(config);
     // Sign in
-    firebase.auth().signInAnonymously().then(function(user) {
-        var firebaseUid = user.uid;
-        console.log('Signed in as ' + firebaseUid);
+    // firebase.auth().signInAnonymously().then(function(user) {
+    //     var firebaseUid = user.uid;
+    //     console.log('Signed in as ' + firebaseUid);
 
-        firebase.database().ref('/' + userId + '/' + experimentId).set({
-            firebase_uid: firebaseUid,
-            start_time: (new Date()).toUTCString(),
-            gender: gender,
-            image_order: imgNames
-        });
-    });
+    //     firebase.database().ref('/' + userId + '/' + experimentId).set({
+    //         firebase_uid: firebaseUid,
+    //         start_time: (new Date()).toUTCString(),
+    //         gender: gender,
+    //         image_order: imgNames
+    //     });
+    // });
 
     // submit button
     $('#submit').click(function() {
@@ -106,7 +106,7 @@ var hookWindow = false;
             // change DOM
             $('#everything').hide();
             $('body').append($('<p>', {
-                text: 'Your response has been successfully submitted. Thank you!',
+                text: 'Your response has been recorded. Thank you!',
                 id: 'end-instr'
             }))
         }, function() {
@@ -122,6 +122,7 @@ var hookWindow = false;
     // setup draggable elements
     interact('.js-drag')
         .draggable({ max: Infinity })
+        // .inertia(true) todo
         .on('dragstart', function (event) {
             event.interaction.x = parseInt(event.target.getAttribute('data-x'), 10) || 0;
             event.interaction.y = parseInt(event.target.getAttribute('data-y'), 10) || 0;
@@ -147,6 +148,12 @@ var hookWindow = false;
     // setup drop areas.
     // dropzone accepts every draggable
     setupDropzone('#drop', '.js-drag');
+
+    var snapGrid = interact.createSnapGrid({
+        x: 100,
+        y: 100,
+        offset: { x: $('#drop').offset().top + 5, y: $('#drop').offset().left + 5 }
+    });
 
     /**
      * Setup a given element as a dropzone.
@@ -191,6 +198,14 @@ var hookWindow = false;
             .on('dragenter', function (event) {
                 addClass(event.target, '-drop-over');
                 // event.relatedTarget.textContent = 'I\'m in';
+                event.draggable.snap({
+                    targets: [snapGrid],
+                    range: Infinity,
+                    elementOrigin: { x: 0, y: 0 }
+                    // endOnly: true
+                });
+
+                // counter
                 var filename = event.relatedTarget.currentSrc.split('/');
                 filename = filename[filename.length - 1];
                 if (!imgDropped[filename]) {
@@ -204,6 +219,9 @@ var hookWindow = false;
             .on('dragleave', function (event) {
                 removeClass(event.target, '-drop-over');
                 // event.relatedTarget.textContent = 'Drag me…';
+                event.draggable.snap(false);
+
+                // counter
                 var filename = event.relatedTarget.currentSrc.split('/');
                 filename = filename[filename.length - 1];
                 if (imgDropped[filename]) {
@@ -247,6 +265,6 @@ var hookWindow = false;
             ? 'msTransform': null;
     });
 
-    hookWindow = true;
+    // hookWindow = true;
 
 }(window.interact));
