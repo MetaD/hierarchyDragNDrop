@@ -25,7 +25,6 @@ var hookWindow = false;
         $('#grid').append($('<tr>'));
     }
     $('#grid tr').each(function() {
-        console.log(this);
         for (var i = 0; i < 30; ++i) {
             $(this).append($('<td>'));
         }
@@ -88,6 +87,12 @@ var hookWindow = false;
         });
     });
 
+
+    // reset button
+    $('#reset').click(function() {
+        hookWindow = false;
+        location.reload();
+    });
     // submit button
     $('#submit').click(function() {
         if ($('#submit').hasClass('disabled')) {
@@ -131,7 +136,11 @@ var hookWindow = false;
 
     // setup draggable elements
     interact('.js-drag')
-        .draggable({ max: Infinity })
+        .draggable({
+            restrict: {
+                restriction: 'parent',
+            }
+        })
         .inertia(true)
         .on('dragstart', function (event) {
             event.interaction.x = parseInt(event.target.getAttribute('data-x'), 10) || 0;
@@ -216,12 +225,6 @@ var hookWindow = false;
                         endOnly: true
                     }
                 })
-                // event.draggable.snap({
-                //     targets: [snapGrid],
-                //     range: Infinity,
-                //     elementOrigin: { x: 0, y: 0 }
-                //     // endOnly: true
-                // });
 
                 // counter
                 var filename = event.relatedTarget.currentSrc.split('/');
@@ -283,6 +286,6 @@ var hookWindow = false;
             ? 'msTransform': null;
     });
 
-    // hookWindow = true;
+    hookWindow = true;
 
 }(window.interact));
