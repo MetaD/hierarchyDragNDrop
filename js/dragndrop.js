@@ -10,6 +10,15 @@ var hookWindow = false;
         }
     }
 
+    // CSS margins
+    var marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
+    if (marginLeft < 930) {
+        $('#reset').css('margin-left', '930px');
+        $('#submit').css('margin-left', '930px');
+        $('#drag-arrow').css('margin-left', '950px');
+        $('#drag-text').css('margin-left', '950px');
+    }
+
     // URL parameters (id & gender)
     var userId, gender;
     var parameters = window.location.search.substring(1);
@@ -43,7 +52,8 @@ var hookWindow = false;
     }
     // append images to DOM
     var marginTop = 20;
-    var marginLeft = Math.round(1.02 * document.documentElement.clientHeight);  // px value of 102vh
+    var marginLeft = Math.max(930, Math.round(1.02 * document.documentElement.clientHeight));  // 930px vs px value of 102vh
+
     for (var i = 0; i < 3; ++i) {
         for (var j = 0; j < 3; ++j) {
             $('#images').append($('<img>', {
@@ -56,7 +66,7 @@ var hookWindow = false;
             marginLeft += 105;
         }
         marginTop += 105;
-        marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
+        marginLeft = Math.max(930, Math.round(1.02 * document.documentElement.clientHeight));
     }
     // image position data
     var numImgDropped = 0;
@@ -91,6 +101,7 @@ var hookWindow = false;
     // reset button
     $('#reset').click(function() {
         hookWindow = false;
+        firebase.auth().currentUser.delete();
         location.reload();
     });
     // submit button

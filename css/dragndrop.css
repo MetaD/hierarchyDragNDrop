@@ -4,6 +4,8 @@ body { background-color: #eee; }
   position: absolute;
   width: 100vw;
   height: 100vh;
+  min-width: 920px;
+  min-height: 920px;
 }
 
 #drag-arrow, #drag-text {
@@ -43,6 +45,8 @@ body { background-color: #eee; }
   position: absolute;
   width: 98vh;
   height: 98vh;
+  min-width: 908px;
+  min-height: 908px;
   top: 0;
   margin: auto;
 }
