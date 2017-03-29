@@ -1,6 +1,6 @@
 var hookWindow = false;
 
-(function (interact) {
+$(function (interact) {
     'use strict';
 
     // Prevent closing window
@@ -10,14 +10,7 @@ var hookWindow = false;
         }
     }
 
-    // CSS margins
-    var marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
-    if (marginLeft < 930) {
-        $('#reset').css('margin-left', '930px');
-        $('#submit').css('margin-left', '930px');
-        $('#drag-arrow').css('margin-left', '950px');
-        $('#drag-text').css('margin-left', '950px');
-    }
+    var imageLength = 100;
 
     // URL parameters (id & gender)
     var userId, gender;
@@ -30,14 +23,36 @@ var hookWindow = false;
     var experimentId = Date.now();
 
     // grid
-    for (var i = 0; i < 30; ++i) {
+    for (var i = 0; i < 40; ++i) {
         $('#grid').append($('<tr>'));
     }
     $('#grid tr').each(function() {
-        for (var i = 0; i < 30; ++i) {
+        for (var i = 0; i < 40; ++i) {
             $(this).append($('<td>'));
         }
-    })
+    });
+    // reset CSS margins in case the screen is not big enough
+    var marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
+    var minMarginLeft = 9 * imageLength + 30;
+    if (marginLeft < minMarginLeft) {
+        imageLength = 80;
+        minMarginLeft = 9 * imageLength + 30;
+        $('#reset').css('margin-left', minMarginLeft.toString() + 'px');
+        $('#submit').css('margin-left', minMarginLeft.toString() + 'px');
+        $('#drag-arrow').css('margin-left', (minMarginLeft + 20).toString() + 'px');
+        $('#drag-text').css('margin-left', (minMarginLeft + 20).toString() + 'px');
+        var dragMarginTop = 3 * imageLength + 50;
+        $('#drag-arrow').css('margin-top', dragMarginTop.toString() + 'px');
+        $('#drag-text').css('margin-top', dragMarginTop.toString() + 'px');
+        $('#images').css('min-width', (minMarginLeft - 10).toString() + 'px');
+        $('#images').css('min-height', (minMarginLeft - 10).toString() + 'px');
+        $('#dropzone-wrapper').css('min-width', (9 * imageLength + 8).toString() + 'px');
+        $('#dropzone-wrapper').css('min-height', (9 * imageLength + 8).toString() + 'px');
+        $('#grid td').css('width', imageLength.toString() + 'px');
+        $('#grid td').css('min-width', imageLength.toString() + 'px');
+        $('#grid td').css('height', imageLength.toString() + 'px');
+        console.log($('#grid td'));
+    }
     // images
     var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     for (var i = 0; i < imgNames.length; ++i) {
@@ -52,7 +67,7 @@ var hookWindow = false;
     }
     // append images to DOM
     var marginTop = 20;
-    var marginLeft = Math.max(930, Math.round(1.02 * document.documentElement.clientHeight));  // 930px vs px value of 102vh
+    var marginLeft = Math.max(minMarginLeft, Math.round(1.02 * document.documentElement.clientHeight));  // px value of 102vh
 
     for (var i = 0; i < 3; ++i) {
         for (var j = 0; j < 3; ++j) {
@@ -60,13 +75,13 @@ var hookWindow = false;
                 src: 'img/' + imgNames[i*3+j],
                 class: 'draggable js-drag shadow',
                 style: 'margin-left:' + marginLeft.toString() + 'px; margin-top:' + marginTop.toString() + 'px;',
-                height: '100px',
-                width: '100px',
+                height: imageLength.toString() + 'px',
+                width: imageLength.toString() + 'px',
             }));
-            marginLeft += 105;
+            marginLeft += imageLength + 5;
         }
-        marginTop += 105;
-        marginLeft = Math.max(930, Math.round(1.02 * document.documentElement.clientHeight));
+        marginTop += imageLength + 5;
+        marginLeft = Math.max(minMarginLeft, Math.round(1.02 * document.documentElement.clientHeight));
     }
     // image position data
     var numImgDropped = 0;
@@ -180,8 +195,8 @@ var hookWindow = false;
     setupDropzone('#drop', '.js-drag');
 
     var snapGrid = interact.createSnapGrid({
-        x: 100,
-        y: 100,
+        x: imageLength,
+        y: imageLength,
         offset: { x: $('#drop').offset().top + 4, y: $('#drop').offset().left + 4 }
     });
 

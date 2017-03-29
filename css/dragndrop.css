@@ -45,16 +45,16 @@ body { background-color: #eee; }
   position: absolute;
   width: 98vh;
   height: 98vh;
-  min-width: 908px;
-  min-height: 908px;
+  min-width: 908px;  /* match .draggable */
+  min-height: 908px;  /* match .draggable */
   top: 0;
   margin: auto;
 }
 
 #grid td {
-  width: 100px;
-  min-width: 100px;
-  height: 100px;
+  width: 100px;      /* match .draggable */
+  min-width: 100px;  /* match .draggable */
+  height: 100px;     /* match .draggable */
   border-radius: 4px;
   border: 1px solid #cecece;
 }
