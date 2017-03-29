@@ -35,7 +35,7 @@ $(function (interact) {
     var marginLeft = Math.round(1.02 * document.documentElement.clientHeight);
     var minMarginLeft = 9 * imageLength + 30;
     if (marginLeft < minMarginLeft) {
-        imageLength = 75;
+        imageLength = 80;
         minMarginLeft = 9 * imageLength + 30;
         $('#reset').css('margin-left', minMarginLeft.toString() + 'px');
         $('#submit').css('margin-left', minMarginLeft.toString() + 'px');
