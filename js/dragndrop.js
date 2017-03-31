@@ -37,10 +37,10 @@ $(function (interact) {
     if (marginLeft < minMarginLeft) {
         imageLength = 80;
         minMarginLeft = 9 * imageLength + 30;
-        $('#reset').css('margin-left', minMarginLeft.toString() + 'px');
-        $('#submit').css('margin-left', minMarginLeft.toString() + 'px');
-        $('#drag-arrow').css('margin-left', (minMarginLeft + 20).toString() + 'px');
-        $('#drag-text').css('margin-left', (minMarginLeft + 20).toString() + 'px');
+        $('#reset').css('margin-left', (minMarginLeft + 60).toString() + 'px');   // + 60 to fit full-screen resolution?
+        $('#submit').css('margin-left', (minMarginLeft + 60).toString() + 'px');
+        $('#drag-arrow').css('margin-left', (minMarginLeft + 80).toString() + 'px');
+        $('#drag-text').css('margin-left', (minMarginLeft + 80).toString() + 'px');
         var dragMarginTop = 3 * imageLength + 50;
         $('#drag-arrow').css('margin-top', dragMarginTop.toString() + 'px');
         $('#drag-text').css('margin-top', dragMarginTop.toString() + 'px');
