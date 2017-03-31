@@ -51,7 +51,6 @@ $(function (interact) {
         $('#grid td').css('width', imageLength.toString() + 'px');
         $('#grid td').css('min-width', imageLength.toString() + 'px');
         $('#grid td').css('height', imageLength.toString() + 'px');
-        console.log($('#grid td'));
     }
     // images
     var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -99,19 +98,6 @@ $(function (interact) {
         messagingSenderId: "202596010925"
     };
     firebase.initializeApp(config);
-    // Sign in
-    firebase.auth().signInAnonymously().then(function(user) {
-        var firebaseUid = user.uid;
-        console.log('Signed in as ' + firebaseUid);
-
-        firebase.database().ref('/' + userId + '/' + experimentId).set({
-            firebase_uid: firebaseUid,
-            start_time: (new Date()).toUTCString(),
-            gender: gender,
-            image_order: imgNames
-        });
-    });
-
 
     // reset button
     $('#reset').click(function() {
@@ -124,6 +110,7 @@ $(function (interact) {
         if ($('#submit').hasClass('disabled')) {
             return;
         }
+
         // image positions
         var positions = {}
         $('#images img').each(function() {
@@ -133,25 +120,42 @@ $(function (interact) {
             positions[filename] = [this.x, this.y];
         });
 
-        // firebase update
-        var path = '/' + userId + '/' + experimentId;
-        var update = {};
-        update[path + '/duration'] = (Date.now() - experimentId) / 1000;  // in sec
-        update[path + '/end_time'] = (new Date()).toUTCString();
-        update[path + '/data'] = positions;
 
-        firebase.database().ref().update(update).then(function() {
-            // successful
-            hookWindow = false;
-            firebase.auth().currentUser.delete();
-            // change DOM
-            $('#everything').hide();
-            $('body').append($('<p>', {
-                text: 'Your response has been recorded. Thank you!',
-                id: 'end-instr'
-            }))
+        // sign in firebase & send data
+        firebase.auth().signInAnonymously().then(function(user) {
+            var firebaseUid = user.uid;
+            console.log('Signed in as ' + firebaseUid);
+
+            firebase.database().ref('/' + userId + '/' + experimentId).set({
+                firebase_uid: firebaseUid,
+                start_time: startTime,
+                gender: gender,
+                image_order: imgNames
+            });
+
+            // update results
+            var path = '/' + userId + '/' + experimentId;
+            var update = {};
+            update[path + '/duration'] = (Date.now() - experimentId) / 1000;  // in sec
+            update[path + '/end_time'] = (new Date()).toUTCString();
+            update[path + '/data'] = positions;
+
+            firebase.database().ref().update(update).then(function() {
+                // successful
+                hookWindow = false;
+                firebase.auth().currentUser.delete();
+                // change DOM
+                $('#everything').hide();
+                $('body').append($('<p>', {
+                    text: 'Your response has been recorded. Thank you!',
+                    id: 'end-instr'
+                }))
+            }, function() {
+                alert('Error: cannot connect to Firebase');
+                // TODO save a file?
+            });
         }, function() {
-            alert('Error');
+            alert('Error: cannot connect to Firebase');
             // TODO save a file?
         });
     });
@@ -313,5 +317,6 @@ $(function (interact) {
     });
 
     hookWindow = true;
+    var startTime = (new Date()).toUTCString();
 
 }(window.interact));
