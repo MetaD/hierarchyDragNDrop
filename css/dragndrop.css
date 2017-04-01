@@ -24,13 +24,13 @@ body { background-color: #eee; }
 
 #reset {
   position: absolute;
-  margin-left: 101vh;  /* match .draggable */
+  margin-left: 930px;  /* match .draggable */
   top: 830px;
 }
 
 #submit {
   position: absolute;
-  margin-left: 101vh;  /* match .draggable */
+  margin-left: 930px;  /* match .draggable */
   top: 870px;
 }
 

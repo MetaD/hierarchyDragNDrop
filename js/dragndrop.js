@@ -37,6 +37,8 @@ $(function (interact) {
     if (marginLeft < minMarginLeft) {
         imageLength = 80;
         minMarginLeft = 9 * imageLength + 30;
+        $('#reset').css('margin-left', minMarginLeft.toString() + 'px');
+        $('#submit').css('margin-left', minMarginLeft.toString() + 'px');
         $('#reset').css('top', (9 * imageLength - 70).toString() + 'px');
         $('#submit').css('top', (9 * imageLength - 30).toString() + 'px');
         $('#drag-arrow').css('margin-left', (minMarginLeft + 80).toString() + 'px');
@@ -50,8 +52,6 @@ $(function (interact) {
         $('#grid td').css('min-width', imageLength.toString() + 'px');
         $('#grid td').css('height', imageLength.toString() + 'px');
     }
-    $('#reset').css('margin-left', minMarginLeft.toString() + 'px');
-    $('#submit').css('margin-left', minMarginLeft.toString() + 'px');
     // reduce area size to contain a 9x9 grid
     $('#dropzone-wrapper').css('width', (9 * imageLength + 9).toString() + 'px');
     $('#dropzone-wrapper').css('height', (9 * imageLength + 9).toString() + 'px');
