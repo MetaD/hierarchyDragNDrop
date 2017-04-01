@@ -23,11 +23,11 @@ $(function (interact) {
     var experimentId = Date.now();
 
     // grid
-    for (var i = 0; i < 40; ++i) {
+    for (var i = 0; i < 9; ++i) {
         $('#grid').append($('<tr>'));
     }
     $('#grid tr').each(function() {
-        for (var i = 0; i < 40; ++i) {
+        for (var i = 0; i < 9; ++i) {
             $(this).append($('<td>'));
         }
     });
@@ -37,8 +37,8 @@ $(function (interact) {
     if (marginLeft < minMarginLeft) {
         imageLength = 80;
         minMarginLeft = 9 * imageLength + 30;
-        $('#reset').css('margin-left', (minMarginLeft + 60).toString() + 'px');   // + 60 to fit full-screen resolution?
-        $('#submit').css('margin-left', (minMarginLeft + 60).toString() + 'px');
+        $('#reset').css('top', (9 * imageLength - 70).toString() + 'px');
+        $('#submit').css('top', (9 * imageLength - 30).toString() + 'px');
         $('#drag-arrow').css('margin-left', (minMarginLeft + 80).toString() + 'px');
         $('#drag-text').css('margin-left', (minMarginLeft + 80).toString() + 'px');
         var dragMarginTop = 3 * imageLength + 50;
@@ -46,12 +46,15 @@ $(function (interact) {
         $('#drag-text').css('margin-top', dragMarginTop.toString() + 'px');
         $('#images').css('min-width', (minMarginLeft - 10).toString() + 'px');
         $('#images').css('min-height', (minMarginLeft - 10).toString() + 'px');
-        $('#dropzone-wrapper').css('min-width', (9 * imageLength + 8).toString() + 'px');
-        $('#dropzone-wrapper').css('min-height', (9 * imageLength + 8).toString() + 'px');
         $('#grid td').css('width', imageLength.toString() + 'px');
         $('#grid td').css('min-width', imageLength.toString() + 'px');
         $('#grid td').css('height', imageLength.toString() + 'px');
     }
+    $('#reset').css('margin-left', minMarginLeft.toString() + 'px');
+    $('#submit').css('margin-left', minMarginLeft.toString() + 'px');
+    // reduce area size to contain a 9x9 grid
+    $('#dropzone-wrapper').css('width', (9 * imageLength + 9).toString() + 'px');
+    $('#dropzone-wrapper').css('height', (9 * imageLength + 9).toString() + 'px');
     // images
     var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     for (var i = 0; i < imgNames.length; ++i) {
@@ -102,7 +105,6 @@ $(function (interact) {
     // reset button
     $('#reset').click(function() {
         hookWindow = false;
-        firebase.auth().currentUser.delete();
         location.reload();
     });
     // submit button
@@ -129,8 +131,7 @@ $(function (interact) {
             firebase.database().ref('/' + userId + '/' + experimentId).set({
                 firebase_uid: firebaseUid,
                 start_time: startTime,
-                gender: gender,
-                image_order: imgNames
+                gender: gender
             });
 
             // update results

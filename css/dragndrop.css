@@ -25,13 +25,13 @@ body { background-color: #eee; }
 #reset {
   position: absolute;
   margin-left: 101vh;  /* match .draggable */
-  bottom: 8vh;
+  top: 830px;
 }
 
 #submit {
   position: absolute;
   margin-left: 101vh;  /* match .draggable */
-  bottom: 2vh;
+  top: 870px;
 }
 
 #end-instr {
@@ -43,10 +43,8 @@ body { background-color: #eee; }
 
 #dropzone-wrapper {
   position: absolute;
-  width: 98vh;
-  height: 98vh;
-  min-width: 908px;  /* match .draggable */
-  min-height: 908px;  /* match .draggable */
+  width: 909px;  /* match .draggable */
+  height: 909px;  /* match .draggable */
   top: 0;
   margin: auto;
 }
