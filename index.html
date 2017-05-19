@@ -52,6 +52,9 @@
                             <input name="gender" type="radio" value="M">Male
                         </div>
                     </div>
+                    <div class="form-group">
+                        <input name="center" type="checkbox"> Center
+                    </div>
 
                     <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>
                 </form>
@@ -61,6 +64,7 @@
         <div id="instr">
             <p>On the next page, you will see the 9 faces from the organization you've learned about.</p>
             <p>Please arrange those faces inside the designated area based on their relative power in their organization.</p>
+            <p id="center_instr">One of the faces has already been placed in position for you.</p>
             <p>You can use whatever configuration you think best represents the individuals' relative power.</p>
             <p><br/></p>
 
@@ -75,6 +79,10 @@
                 $('#user-id-group').removeClass('bold has-error has-danger');
                 userId = $('#user-id').val();
                 gender = $("input[name='gender']:checked").val();
+                center = $("input[name='center']").is(":checked");
+                if (!center) {
+                    $('#center_instr').hide();
+                }
                 if (userId.length == 0) {  // error checking
                     $('#user-id-group').addClass('bold has-error has-danger');
                     return;
@@ -83,7 +91,7 @@
                 $('#instr').show();
             }
             $('#start').click(function() {
-                window.location.href = 'dragndrop.html?id=' + userId + '&g=' + gender;
+                window.location.href = 'dragndrop.html?id=' + userId + '&g=' + gender + '&c=' + center;
             });
         </script>
     </body>

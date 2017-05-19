@@ -13,12 +13,14 @@ $(function (interact) {
     var imageLength = 100;
 
     // URL parameters (id & gender)
-    var userId, gender;
+    var userId, gender, center;
     var parameters = window.location.search.substring(1);
     if (parameters.length > 0) {
         var stuff = parameters.split(/[&=]/);
         userId = stuff[1];
-        gender = stuff[3]    };
+        gender = stuff[3];
+        center = stuff[5];
+    };
 
     var experimentId = Date.now();
 
@@ -56,9 +58,20 @@ $(function (interact) {
     $('#dropzone-wrapper').css('width', (9 * imageLength + 9).toString() + 'px');
     $('#dropzone-wrapper').css('height', (9 * imageLength + 9).toString() + 'px');
     // images
-    var imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    var middleImgName;
+    var imgNames = [];
+    if (center == 'true') {
+        middleImgName = gender + mid_people[userId] + '.jpg';  // TODO
+        for (var i = 1; i < 10; ++i) {
+            if (i.toString() != mid_people[userId]) {
+                imgNames.push(i.toString());
+            }
+        }
+    } else {
+        imgNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    }
     for (var i = 0; i < imgNames.length; ++i) {
-        imgNames[i] = gender + imgNames[i] + '.jpg'
+        imgNames[i] = gender + imgNames[i] + '.jpg';
     }
     // shuffle image names
     for (var i = imgNames.length - 1; i > 0; i--) {
@@ -71,19 +84,35 @@ $(function (interact) {
     var marginTop = 20;
     var marginLeft = Math.max(minMarginLeft, Math.round(1.02 * document.documentElement.clientHeight));  // px value of 102vh
 
-    for (var i = 0; i < 3; ++i) {
+    for (var i = 0, img_i = 0; i < 3; ++i) {
         for (var j = 0; j < 3; ++j) {
+            if (i == 1 && j == 1 && center == 'true') {
+                marginLeft += imageLength + 5;
+                continue;
+            }
             $('#images').append($('<img>', {
-                src: 'img/' + imgNames[i*3+j],
+                src: 'img/' + imgNames[img_i],
                 class: 'draggable js-drag shadow',
                 style: 'margin-left:' + marginLeft.toString() + 'px; margin-top:' + marginTop.toString() + 'px;',
                 height: imageLength.toString() + 'px',
                 width: imageLength.toString() + 'px',
             }));
             marginLeft += imageLength + 5;
+            ++img_i;
         }
         marginTop += imageLength + 5;
         marginLeft = Math.max(minMarginLeft, Math.round(1.02 * document.documentElement.clientHeight));
+    }
+    // place middle image
+    if (center == 'true') {
+        var middlePos = $($('#grid td')[40]).position();
+        $('#images').append($('<img>', {
+            src: 'img/' + middleImgName,
+            class: 'draggable js-drag shadow',
+            style: 'margin-left:' + middlePos['left'].toString() + 'px; margin-top:' + middlePos['top'].toString() + 'px;',
+            height: imageLength.toString() + 'px',
+            width: imageLength.toString() + 'px',
+        }));
     }
     // image position data
     var numImgDropped = 0;
